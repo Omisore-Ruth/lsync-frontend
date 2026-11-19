@@ -1,0 +1,256 @@
+@import "tailwindcss";
+
+/*
+  LSync design tokens.
+  Colours were sampled from Dan's Figma screens (the file has no saved variables yet),
+  so treat them as close approximations until Dan publishes real styles.
+  Deviation: --color-primary is darker than the pale button purple in the Figma file
+  (#AB72D4) so white button text passes WCAG AA contrast.
+*/
+@theme {
+  --font-sans: "Montserrat Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-violet-deep: #510eac; /* sign-in right panel */
+  --color-plum: #684a9d; /* app sidebar */
+  --color-indigo-brand: #4b3fd6; /* active states, charts, diagram accents */
+  --color-lilac: #d2b7ed; /* sign-up shapes */
+  --color-lilac-soft: #eeeafb; /* active nav pill, tags */
+  --color-primary: #7a3db8; /* buttons (accessible version of #AB72D4) */
+  --color-primary-hover: #6a2fa6;
+  --color-primary-soft: #ab72d4; /* design's original button colour */
+  --color-ink: #1b1140; /* headings, wordmark navy */
+  --color-body: #4a4466; /* body text */
+  --color-muted: #6d6889; /* helper text (AA on white and page bg) */
+  --color-page: #e9ebf3; /* auth + app background */
+  --color-card: #fdf9fa; /* auth card */
+  --color-peach: #fcaf7b; /* card borders */
+  --color-peach-soft: #ffe9d6;
+  --color-orange-link: #c2570c; /* "Create an account" link (AA on card) */
+  --color-success: #0f7b5f;
+  --color-success-soft: #dff5ec;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdeceb;
+  --color-warn-soft: #fff3d6;
+}
+
+html {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-indigo-brand);
+  outline-offset: 2px;
+}
+
+/* ---------- Preloader ---------- */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--color-page);
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+#preloader[data-done="true"] {
+  opacity: 0;
+  visibility: hidden;
+}
+/* Set by an inline script before first paint when the preloader already ran this session */
+html.no-preload #preloader {
+  display: none;
+}
+
+.pl-logo {
+  position: relative;
+  width: min(80vw, 540px);
+  aspect-ratio: 1239 / 411;
+}
+.pl-logo img {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+/* positions are percentages of the 1239 x 411 logo box */
+.pl-mark {
+  left: 0;
+  top: 0;
+  width: 35.6%;
+  animation: pl-mark 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both;
+}
+.pl-word {
+  left: 39.7%;
+  top: 14.4%;
+  width: 60.2%;
+  animation: pl-word 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.45s both;
+}
+.pl-tag {
+  left: 39.8%;
+  top: 75.9%;
+  width: 60.3%;
+  animation: pl-tag 0.5s ease-out 1s both;
+}
+.pl-bar {
+  left: 40.6%;
+  top: 92.2%;
+  width: 28.7%;
+  transform-origin: left center;
+  animation: pl-bar 0.55s cubic-bezier(0.65, 0, 0.35, 1) 1.2s both;
+}
+
+@keyframes pl-mark {
+  from { opacity: 0; transform: translateY(16px) rotate(-8deg) scale(0.88); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pl-word {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateX(-12px); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); transform: none; }
+}
+@keyframes pl-tag {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pl-bar {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-logo img { animation: none !important; }
+  #preloader { transition-duration: 0.01s; }
+}
+
+/* ---------- Auth diagram ---------- */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -24; }
+}
+.dash-flow {
+  animation: dash-flow 1.6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dash-flow { animation: none; }
+}
+
+/* Bars and chart marks grow in from the left/bottom once. Off for reduced motion. */
+@keyframes grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes grow-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+.grow-x { transform-origin: left center; animation: grow-x 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.grow-y { transform-box: fill-box; transform-origin: bottom; animation: grow-y 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .grow-x, .grow-y { animation: none; }
+}
+
+/* ---------- Auth pages: gentle motion ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(22px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pop {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+@keyframes drift {
+  from { transform: translateY(-10px); }
+  to { transform: translateY(12px); }
+}
+@keyframes shake {
+  0%, 100% { transform: none; }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+.rise { animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 70ms); }
+.slide-in { animation: slide-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(0.35s + var(--i, 0) * 120ms); }
+.pop { animation: pop 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) both; animation-delay: calc(0.55s + var(--i, 0) * 120ms); }
+.drift { animation: drift var(--d, 9s) ease-in-out infinite alternate; }
+.shake { animation: shake 0.45s ease-in-out; }
+.parallax { transition: translate 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); translate: calc(var(--px, 0) * var(--k, 20) * 1px) calc(var(--py, 0) * var(--k, 20) * 1px); }
+.field:focus { box-shadow: 0 0 0 4px rgba(75, 63, 214, 0.14); border-color: var(--color-indigo-brand); }
+@media (prefers-reduced-motion: reduce) {
+  .rise, .slide-in, .pop, .drift, .shake { animation: none; }
+  .parallax { transition: none; translate: none; }
+}
+
+/* ---------- Sign-in diagram: one 10s beat (gather, shoot, burst, turn) ---------- */
+.sd-tile { translate: calc(var(--sx) * 1cqw) calc(var(--sy) * 1cqw); animation: sd-tile 10s cubic-bezier(0.45, 0, 0.25, 1) both; }
+.sd-orbit { animation: sd-orbit 10s ease-in-out both; }
+.sd-face { animation: sd-counter 10s ease-in-out both; }
+.sd-hub { animation: sd-hub 10s ease-in-out both; }
+.sd-icon { animation: sd-spin 10s ease-in-out both; }
+.sd-ring { opacity: 0; animation: sd-ring 10s ease-out both; }
+.sd-shoot { stroke-dashoffset: 14; animation: sd-shoot 10s linear both; }
+
+@keyframes sd-tile {
+  0%, 12% { translate: calc(var(--sx) * 1cqw) calc(var(--sy) * 1cqw); scale: 1; opacity: 1; }
+  30%, 42% { translate: 0 0; scale: 0.45; opacity: 1; }
+  58%, 100% { translate: calc(var(--sx) * 1cqw) calc(var(--sy) * 1cqw); scale: 1; opacity: 1; }
+}
+@keyframes sd-orbit {
+  0%, 62% { rotate: 0deg; }
+  92%, 100% { rotate: 90deg; }
+}
+@keyframes sd-counter {
+  0%, 62% { rotate: 0deg; }
+  92%, 100% { rotate: -90deg; }
+}
+@keyframes sd-hub {
+  0%, 22% { scale: 1; }
+  30% { scale: 1.14; }
+  44%, 100% { scale: 1; }
+}
+@keyframes sd-spin {
+  0%, 62% { rotate: 0deg; }
+  92%, 100% { rotate: 180deg; }
+}
+@keyframes sd-ring {
+  0%, 30% { opacity: 0; scale: 1; }
+  32% { opacity: 0.7; scale: 1; }
+  48%, 100% { opacity: 0; scale: 2.1; }
+}
+@keyframes sd-shoot {
+  0%, 31% { stroke-dashoffset: 14; opacity: 1; }
+  44% { stroke-dashoffset: -100; opacity: 1; }
+  45%, 100% { stroke-dashoffset: -100; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sd-tile, .sd-orbit, .sd-face, .sd-hub, .sd-icon, .sd-ring, .sd-shoot { animation: none; }
+  .sd-shoot { opacity: 0; }
+}
+
+/* Hold page entrance animations until the preloader has left, so they are seen rather than finishing underneath it. */
+html:not(.ready) :is(.rise, .slide-in, .pop, .sd-tile, .sd-orbit, .sd-face, .sd-hub, .sd-icon, .sd-ring, .sd-shoot) {
+  animation-play-state: paused;
+}
+
+/* Peer-insights orb (dashboard) */
+@keyframes orb-ring { 0% { transform: scale(.7); opacity: .9; } 100% { transform: scale(1.35); opacity: 0; } }
+@keyframes orb-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.orb-ring { animation: orb-ring 2.8s ease-out infinite; }
+.orb-ring-2 { animation-delay: 1.4s; }
+.orb-core { animation: orb-float 4s ease-in-out infinite; }
+/* Blank-dashboard hero: sources orbiting the LSync mark */
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes spin-back { to { transform: rotate(-360deg); } }
+.orbit { animation: spin-slow 38s linear infinite; }
+.orbit-item { animation: spin-back 38s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .orb-ring, .orb-core, .orbit, .orbit-item { animation: none !important; } }

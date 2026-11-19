@@ -1,0 +1,877 @@
+{
+ "source": "EdTech dropout dataset supplied to the group (5,000 students, 10 cities, enrolled 2024)",
+ "total": 5000,
+ "labels": [
+  "active",
+  "at-risk",
+  "dropped"
+ ],
+ "overall": [
+  0.3408,
+  0.3326,
+  0.3266
+ ],
+ "means": {
+  "active": {
+   "login_frequency": 6.67,
+   "completion_rate": 0.51,
+   "forum_posts_count": 7.98,
+   "last_activity_days_ago": 8.23
+  },
+  "at-risk": {
+   "login_frequency": 2.71,
+   "completion_rate": 0.18,
+   "forum_posts_count": 3.26,
+   "last_activity_days_ago": 9.02
+  },
+  "dropped": {
+   "login_frequency": 0.86,
+   "completion_rate": 0.09,
+   "forum_posts_count": 1.25,
+   "last_activity_days_ago": 10.87
+  }
+ },
+ "regions": [
+  {
+   "city": "Alexandria",
+   "country": "Egypt",
+   "lat": 31.2,
+   "lon": 29.9,
+   "n": 493,
+   "shares": [
+    0.3915,
+    0.3185,
+    0.2901
+   ],
+   "avgCourses": 4.11,
+   "avgCompletion": 0.28,
+   "avgLogins": 3.75,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 135,
+     "shares": [
+      0.4444,
+      0.2667,
+      0.2889
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 123,
+     "shares": [
+      0.3577,
+      0.3252,
+      0.3171
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 235,
+     "shares": [
+      0.3787,
+      0.3447,
+      0.2766
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Riyadh",
+   "country": "Saudi Arabia",
+   "lat": 24.7,
+   "lon": 46.7,
+   "n": 510,
+   "shares": [
+    0.3686,
+    0.3275,
+    0.3039
+   ],
+   "avgCourses": 4.05,
+   "avgCompletion": 0.256,
+   "avgLogins": 3.51,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 132,
+     "shares": [
+      0.3258,
+      0.3409,
+      0.3333
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 159,
+     "shares": [
+      0.3648,
+      0.3208,
+      0.3145
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 219,
+     "shares": [
+      0.3973,
+      0.3242,
+      0.2785
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Amman",
+   "country": "Jordan",
+   "lat": 31.95,
+   "lon": 35.9,
+   "n": 481,
+   "shares": [
+    0.3576,
+    0.3222,
+    0.3202
+   ],
+   "avgCourses": 4.07,
+   "avgCompletion": 0.274,
+   "avgLogins": 3.57,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 143,
+     "shares": [
+      0.3636,
+      0.3776,
+      0.2587
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 108,
+     "shares": [
+      0.3333,
+      0.2593,
+      0.4074
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 230,
+     "shares": [
+      0.3652,
+      0.3174,
+      0.3174
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Dubai",
+   "country": "UAE",
+   "lat": 25.2,
+   "lon": 55.3,
+   "n": 482,
+   "shares": [
+    0.3527,
+    0.3237,
+    0.3237
+   ],
+   "avgCourses": 3.98,
+   "avgCompletion": 0.27,
+   "avgLogins": 3.58,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 135,
+     "shares": [
+      0.3778,
+      0.3037,
+      0.3185
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 143,
+     "shares": [
+      0.3147,
+      0.3916,
+      0.2937
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 204,
+     "shares": [
+      0.3627,
+      0.2892,
+      0.348
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Baghdad",
+   "country": "Iraq",
+   "lat": 33.3,
+   "lon": 44.4,
+   "n": 532,
+   "shares": [
+    0.3477,
+    0.3158,
+    0.3365
+   ],
+   "avgCourses": 3.99,
+   "avgCompletion": 0.259,
+   "avgLogins": 3.33,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 145,
+     "shares": [
+      0.3862,
+      0.3103,
+      0.3034
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 161,
+     "shares": [
+      0.3168,
+      0.3168,
+      0.3665
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 226,
+     "shares": [
+      0.3451,
+      0.3186,
+      0.3363
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Cairo",
+   "country": "Egypt",
+   "lat": 30.0,
+   "lon": 31.2,
+   "n": 484,
+   "shares": [
+    0.3471,
+    0.3161,
+    0.3368
+   ],
+   "avgCourses": 3.9,
+   "avgCompletion": 0.253,
+   "avgLogins": 3.38,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 141,
+     "shares": [
+      0.305,
+      0.3546,
+      0.3404
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 152,
+     "shares": [
+      0.3355,
+      0.3026,
+      0.3618
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 191,
+     "shares": [
+      0.3874,
+      0.2984,
+      0.3141
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Tunis",
+   "country": "Tunisia",
+   "lat": 36.8,
+   "lon": 10.2,
+   "n": 499,
+   "shares": [
+    0.3246,
+    0.3747,
+    0.3006
+   ],
+   "avgCourses": 4.07,
+   "avgCompletion": 0.272,
+   "avgLogins": 3.65,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 155,
+     "shares": [
+      0.3677,
+      0.3742,
+      0.2581
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 114,
+     "shares": [
+      0.2807,
+      0.4298,
+      0.2895
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 230,
+     "shares": [
+      0.3174,
+      0.3478,
+      0.3348
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Casablanca",
+   "country": "Morocco",
+   "lat": 33.6,
+   "lon": -7.6,
+   "n": 509,
+   "shares": [
+    0.3084,
+    0.3379,
+    0.3536
+   ],
+   "avgCourses": 3.87,
+   "avgCompletion": 0.242,
+   "avgLogins": 3.2,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 156,
+     "shares": [
+      0.3526,
+      0.2756,
+      0.3718
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 149,
+     "shares": [
+      0.2617,
+      0.4027,
+      0.3356
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 204,
+     "shares": [
+      0.3088,
+      0.3382,
+      0.3529
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Beirut",
+   "country": "Lebanon",
+   "lat": 33.9,
+   "lon": 35.5,
+   "n": 476,
+   "shares": [
+    0.3067,
+    0.3319,
+    0.3613
+   ],
+   "avgCourses": 4.0,
+   "avgCompletion": 0.256,
+   "avgLogins": 3.3,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 134,
+     "shares": [
+      0.3209,
+      0.3284,
+      0.3507
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 133,
+     "shares": [
+      0.3308,
+      0.3459,
+      0.3233
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 209,
+     "shares": [
+      0.2823,
+      0.3254,
+      0.3923
+     ]
+    }
+   ]
+  },
+  {
+   "city": "Doha",
+   "country": "Qatar",
+   "lat": 25.3,
+   "lon": 51.5,
+   "n": 534,
+   "shares": [
+    0.3052,
+    0.3558,
+    0.339
+   ],
+   "avgCourses": 3.96,
+   "avgCompletion": 0.25,
+   "avgLogins": 3.31,
+   "byCourses": [
+    {
+     "label": "1 to 2 courses",
+     "n": 154,
+     "shares": [
+      0.2857,
+      0.3961,
+      0.3182
+     ]
+    },
+    {
+     "label": "3 to 4 courses",
+     "n": 165,
+     "shares": [
+      0.2788,
+      0.3515,
+      0.3697
+     ]
+    },
+    {
+     "label": "5 to 7 courses",
+     "n": 215,
+     "shares": [
+      0.3395,
+      0.3302,
+      0.3302
+     ]
+    }
+   ]
+  }
+ ],
+ "courseBands": [
+  {
+   "label": "1 to 2 courses",
+   "n": 1430,
+   "shares": [
+    0.3524,
+    0.3336,
+    0.314
+   ]
+  },
+  {
+   "label": "3 to 4 courses",
+   "n": 1407,
+   "shares": [
+    0.317,
+    0.3447,
+    0.3383
+   ]
+  },
+  {
+   "label": "5 to 7 courses",
+   "n": 2163,
+   "shares": [
+    0.3486,
+    0.3241,
+    0.3273
+   ]
+  }
+ ],
+ "metrics": {
+  "login_frequency": {
+   "title": "Logins per week",
+   "blurb": "How often a student opens the platform in a week.",
+   "buckets": [
+    {
+     "label": "Up to 1",
+     "n": 1266,
+     "shares": [
+      0.0,
+      0.1572,
+      0.8428
+     ]
+    },
+    {
+     "label": "1 to 2",
+     "n": 908,
+     "shares": [
+      0.0363,
+      0.4637,
+      0.5
+     ]
+    },
+    {
+     "label": "2 to 4",
+     "n": 1232,
+     "shares": [
+      0.2955,
+      0.6185,
+      0.086
+     ]
+    },
+    {
+     "label": "4 to 6",
+     "n": 694,
+     "shares": [
+      0.6888,
+      0.304,
+      0.0072
+     ]
+    },
+    {
+     "label": "Over 6",
+     "n": 900,
+     "shares": [
+      0.9211,
+      0.0778,
+      0.0011
+     ]
+    }
+   ]
+  },
+  "completion_rate": {
+   "title": "Course completion",
+   "blurb": "Share of course work finished.",
+   "buckets": [
+    {
+     "label": "Under 10%",
+     "n": 1655,
+     "shares": [
+      0.0314,
+      0.3432,
+      0.6254
+     ]
+    },
+    {
+     "label": "10 to 20%",
+     "n": 781,
+     "shares": [
+      0.0679,
+      0.4994,
+      0.4328
+     ]
+    },
+    {
+     "label": "20 to 35%",
+     "n": 1097,
+     "shares": [
+      0.2789,
+      0.4877,
+      0.2334
+     ]
+    },
+    {
+     "label": "35 to 50%",
+     "n": 640,
+     "shares": [
+      0.8031,
+      0.1906,
+      0.0063
+     ]
+    },
+    {
+     "label": "Over 50%",
+     "n": 827,
+     "shares": [
+      0.942,
+      0.058,
+      0.0
+     ]
+    }
+   ]
+  },
+  "forum_posts_count": {
+   "title": "Forum posts",
+   "blurb": "Posts in the course community.",
+   "buckets": [
+    {
+     "label": "None",
+     "n": 655,
+     "shares": [
+      0.0092,
+      0.1771,
+      0.8137
+     ]
+    },
+    {
+     "label": "1 to 2",
+     "n": 1649,
+     "shares": [
+      0.0849,
+      0.396,
+      0.5191
+     ]
+    },
+    {
+     "label": "3 to 5",
+     "n": 1319,
+     "shares": [
+      0.3472,
+      0.4761,
+      0.1766
+     ]
+    },
+    {
+     "label": "More than 5",
+     "n": 1377,
+     "shares": [
+      0.7988,
+      0.1932,
+      0.008
+     ]
+    }
+   ]
+  },
+  "last_activity_days_ago": {
+   "title": "Days since last activity",
+   "blurb": "How long a student has been silent.",
+   "buckets": [
+    {
+     "label": "1 to 3 days",
+     "n": 1649,
+     "shares": [
+      0.3487,
+      0.3438,
+      0.3075
+     ]
+    },
+    {
+     "label": "4 to 7 days",
+     "n": 1122,
+     "shares": [
+      0.3699,
+      0.3226,
+      0.3075
+     ]
+    },
+    {
+     "label": "8 to 14 days",
+     "n": 1171,
+     "shares": [
+      0.3834,
+      0.3561,
+      0.2605
+     ]
+    },
+    {
+     "label": "15 to 30 days",
+     "n": 850,
+     "shares": [
+      0.2741,
+      0.2976,
+      0.4282
+     ]
+    },
+    {
+     "label": "Over 30 days",
+     "n": 208,
+     "shares": [
+      0.1538,
+      0.3077,
+      0.5385
+     ]
+    }
+   ]
+  }
+ },
+ "context": {
+  "exam_season": [
+   {
+    "label": "Outside exam season",
+    "n": 4530,
+    "shares": [
+     0.3539,
+     0.3344,
+     0.3117
+    ]
+   },
+   {
+    "label": "Exam season",
+    "n": 470,
+    "shares": [
+     0.2149,
+     0.3149,
+     0.4702
+    ]
+   }
+  ],
+  "courses_enrolled": [
+   {
+    "label": "1 course",
+    "n": 724,
+    "shares": [
+     0.3508,
+     0.3425,
+     0.3066
+    ]
+   },
+   {
+    "label": "2 courses",
+    "n": 706,
+    "shares": [
+     0.3541,
+     0.3244,
+     0.3215
+    ]
+   },
+   {
+    "label": "3 courses",
+    "n": 704,
+    "shares": [
+     0.3295,
+     0.3366,
+     0.3338
+    ]
+   },
+   {
+    "label": "4 courses",
+    "n": 703,
+    "shares": [
+     0.3044,
+     0.3528,
+     0.3428
+    ]
+   },
+   {
+    "label": "5 courses",
+    "n": 726,
+    "shares": [
+     0.3609,
+     0.3196,
+     0.3196
+    ]
+   },
+   {
+    "label": "6 courses",
+    "n": 752,
+    "shares": [
+     0.3391,
+     0.3165,
+     0.3444
+    ]
+   },
+   {
+    "label": "7 courses",
+    "n": 685,
+    "shares": [
+     0.346,
+     0.3372,
+     0.3168
+    ]
+   }
+  ]
+ },
+ "correlation": [
+  {
+   "feature": "login_frequency",
+   "r": -0.732
+  },
+  {
+   "feature": "completion_rate",
+   "r": -0.704
+  },
+  {
+   "feature": "forum_posts_count",
+   "r": -0.645
+  },
+  {
+   "feature": "completed_assignments",
+   "r": -0.573
+  },
+  {
+   "feature": "last_activity_days_ago",
+   "r": 0.114
+  },
+  {
+   "feature": "exam_season",
+   "r": 0.106
+  },
+  {
+   "feature": "age",
+   "r": -0.029
+  },
+  {
+   "feature": "courses_enrolled",
+   "r": 0.007
+  }
+ ],
+ "model": {
+  "features": [
+   "login_frequency",
+   "completion_rate",
+   "forum_posts_count"
+  ],
+  "mean": [
+   3.4538,
+   0.261,
+   4.2122
+  ],
+  "std": [
+   3.2483,
+   0.249,
+   4.2701
+  ],
+  "coef": [
+   [
+    2.5003,
+    1.5271,
+    0.2944
+   ],
+   [
+    1.2117,
+    -0.4757,
+    0.1766
+   ],
+   [
+    -3.712,
+    -1.0514,
+    -0.4709
+   ]
+  ],
+  "intercept": [
+   0.7965,
+   1.3868,
+   -2.1833
+  ],
+  "cvAccuracy": 0.801,
+  "ranges": {
+   "login_frequency": [
+    0,
+    14
+   ],
+   "completion_rate": [
+    0,
+    1
+   ],
+   "forum_posts_count": [
+    0,
+    24
+   ]
+  }
+ }
+}
