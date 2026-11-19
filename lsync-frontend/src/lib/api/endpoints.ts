@@ -10,7 +10,7 @@ export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:200
  * Demo mode: no backend needed. The app serves realistic sample data from the browser's storage so every
  * screen can be clicked through. Set NEXT_PUBLIC_USE_MOCKS=false to talk to the real API.
  */
-export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
+export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "false";
 
 export const endpoints = {
   // --- auth + user ---
