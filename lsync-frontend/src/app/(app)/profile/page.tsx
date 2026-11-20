@@ -1,11 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LogOut, Trash2, X } from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { ChangePasswordCard } from "@/components/profile/ChangePasswordCard";
+import { DeleteAccount } from "@/components/profile/DeleteAccount";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Banner, Loading } from "@/components/ui/Banner";
 import { Button } from "@/components/ui/Button";
@@ -266,14 +268,14 @@ export default function ProfilePage() {
             </div>
           </Card>
 
-          <section className="rounded-2xl border border-danger/30 bg-danger-soft p-5 sm:p-6">
-            <h2 className="text-lg font-bold text-danger">Delete account</h2>
-            <p className="mt-1 text-sm text-body">This would permanently delete your profile, your learning logs and your public portfolio. It can&apos;t be undone.</p>
-            <Button type="button" disabled title="Account deletion isn't available yet" className="mt-4 !bg-danger !py-2.5 text-sm">
-              <Trash2 className="size-4" aria-hidden /> Delete account
-            </Button>
-            <p className="mt-2 text-xs text-body">Not available yet. It needs a server endpoint first.</p>
-          </section>
+          <ChangePasswordCard />
+
+          <DeleteAccount
+            onDeleted={() => {
+              logout();
+              router.replace("/register");
+            }}
+          />
 
           {USE_MOCKS && (
             <Card title="Demo data" subtitle="Only shown in demo mode">

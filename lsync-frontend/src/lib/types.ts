@@ -52,6 +52,9 @@ export type SyncResult = {
 
 export type Pagination = { page: number; limit: number; total: number; pages: number };
 
+/** A platform account the learner has linked by username (the backend stores it under /api/users/accounts). */
+export type LinkedAccount = { id: string; source: string; username: string; url?: string };
+
 export type Profile = {
   fullName?: string;
   username?: string;

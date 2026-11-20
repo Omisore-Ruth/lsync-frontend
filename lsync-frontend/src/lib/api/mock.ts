@@ -19,6 +19,7 @@ type MockUser = {
   about?: string;
   interests?: string[];
   isPublic?: boolean;
+  accounts?: { id: string; source: string; username: string; url?: string }[];
 };
 type GithubState = { connected: boolean; commits: GithubActivity[]; synced: string[] };
 type Db = { users: MockUser[]; logs: Record<string, LearningLog[]>; github: Record<string, GithubState> };
@@ -115,6 +116,10 @@ function seed(): Db {
         about: "",
         interests: ["Data analysis", "Product design", "Web development"],
         isPublic: false,
+        accounts: [
+          { id: "a-coursera", source: "Coursera", username: "demo-learner", url: "https://www.coursera.org/user/demo-learner" },
+          { id: "a-udemy", source: "Udemy", username: "demo-learner" },
+        ],
       },
     ],
     logs: { [id]: seedLogs(today, id) },
@@ -213,7 +218,7 @@ export async function mockRequest(method: string, path: string, body: unknown, t
     const id = String(b.token ?? "").replace(/^reset\./, "");
     const target = db.users.find((u) => u.id === id);
     if (!target) return fail(400, "This reset link is invalid or has expired. Request a new one.");
-    target.password = String(b.password ?? "");
+    target.password = String(b.newPassword ?? b.password ?? "");
     save();
     return ok({ success: true, message: "Password updated." });
   }
@@ -240,6 +245,41 @@ export async function mockRequest(method: string, path: string, body: unknown, t
       const { password: _pw, ...rest } = user; // eslint-disable-line @typescript-eslint/no-unused-vars
       return ok({ success: true, data: rest });
     }
+  }
+
+  // ---- account: password, deletion, linked platform accounts ----
+  if (pathname === endpoints.changePassword && method === "PUT") {
+    if (b.currentPassword !== user.password) return fail(400, "Current password is incorrect.");
+    user.password = String(b.newPassword ?? "");
+    save();
+    return ok({ success: true, msg: "Password updated" });
+  }
+  if (pathname === endpoints.deleteAccount && method === "DELETE") {
+    if (b.password !== user.password) return fail(400, "Password incorrect.");
+    if (b.confirmDelete !== "DELETE") return fail(400, "You must type DELETE to confirm.");
+    db.users = db.users.filter((u) => u.id !== user.id);
+    delete db.logs[user.id];
+    delete db.github[user.id];
+    save();
+    return ok({ success: true, msg: "Account and all data deleted permanently" });
+  }
+  if (pathname === endpoints.accounts) {
+    const accounts = (user.accounts ??= []);
+    if (method === "GET") return ok({ success: true, data: accounts });
+    if (method === "POST") {
+      const source = String(b.source ?? "");
+      if (!String(b.platformUsername ?? "").trim()) return fail(400, "Platform username required");
+      if (accounts.some((a) => a.source === source)) return fail(400, "Platform already linked");
+      accounts.push({ id: `a-${Date.now()}`, source, username: String(b.platformUsername).trim(), url: typeof b.profileUrl === "string" ? b.profileUrl : undefined });
+      save();
+      return ok({ success: true, data: accounts }, 201);
+    }
+  }
+  const acct = pathname.match(/^\/api\/users\/accounts\/([^/]+)$/);
+  if (acct && method === "DELETE") {
+    user.accounts = (user.accounts ?? []).filter((a) => a.id !== decodeURIComponent(acct[1]));
+    save();
+    return ok({ success: true });
   }
 
   if (pathname === endpoints.learningLogs) {

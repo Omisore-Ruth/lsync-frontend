@@ -46,6 +46,9 @@ function extractUser(data: unknown): User | null {
   return { ...u, fullName: u.fullName ?? u.fullname ?? u.name };
 }
 
+/** Set when the person signs out on purpose, so route guards know not to add a "?next=" to the login address. */
+export const signOutState = { deliberate: false };
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<Status>("loading");
@@ -91,7 +94,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener(UNAUTHORIZED_EVENT, signOut);
   }, [signOut]);
 
+  /** A person choosing to log out (or deleting their account) lands on a clean page. Only a lost session gets "?next=". */
+  const logout = useCallback(() => {
+    signOutState.deliberate = true;
+    signOut();
+  }, [signOut]);
+
   const finishAuth = useCallback(async (data: unknown, remember: boolean) => {
+    signOutState.deliberate = false;
     const token = extractToken(data);
     if (!token) throw new ApiError("Signed in, but the server didn't return an access token.", 200, data);
     tokenStore.set(token, remember);
@@ -132,8 +142,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateUser = useCallback((patch: Partial<User>) => setUser((u) => (u ? { ...u, ...patch } : u)), []);
 
   const value = useMemo(
-    () => ({ user, status, login, register, logout: signOut, updateUser }),
-    [user, status, login, register, signOut, updateUser],
+    () => ({ user, status, login, register, logout, updateUser }),
+    [user, status, login, register, logout, updateUser],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -46,7 +46,7 @@ function ResetForm() {
   async function onSubmit(v: Values) {
     setServerError(null);
     try {
-      await api(endpoints.resetPassword, { method: "POST", body: { token, password: v.password }, auth: false });
+      await api(endpoints.resetPassword, { method: "POST", body: { token, newPassword: v.password }, auth: false });
       setDone(true);
     } catch (e) {
       setServerError(e instanceof Error ? e.message : "Something went wrong. Please try again.");

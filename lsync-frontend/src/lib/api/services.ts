@@ -5,7 +5,7 @@
  */
 import { api, ApiError } from "./client";
 import { endpoints, USE_MOCKS } from "./endpoints";
-import type { GithubActivity, GithubRepo, LearningLog, NewLog, Pagination, Profile, SyncResult } from "@/lib/types";
+import type { GithubActivity, GithubRepo, LearningLog, LinkedAccount, NewLog, Pagination, Profile, SyncResult } from "@/lib/types";
 
 const nameOf = (v: any): string => (typeof v === "string" ? v : (v?.name ?? v?.title ?? ""));
 
@@ -211,4 +211,51 @@ export async function saveProfile(patch: Partial<Omit<Profile, "email" | "userna
   if (Object.keys(body).length) await api(endpoints.profileUpdate, { method: "PUT", body });
   if (patch.isPublic !== undefined) await api(endpoints.privacy, { method: "PUT", body: { isPublic: patch.isPublic } });
   return getProfile();
+}
+
+/* ---------- account: password, deletion, linked platform accounts ---------- */
+
+/** PUT /api/users/password needs currentPassword, newPassword (letter + number) and a matching confirmPassword. */
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  await api(endpoints.changePassword, { method: "PUT", body: { currentPassword, newPassword, confirmPassword: newPassword } });
+}
+
+/** DELETE /api/users/delete needs the password and the exact word DELETE. It also removes the learner's logs and platforms. */
+export async function deleteAccount(password: string): Promise<void> {
+  await api(endpoints.deleteAccount, { method: "DELETE", body: { password, confirmDelete: "DELETE" } });
+}
+
+/** The backend's platform "type" for blogs is "Blogs"; everywhere in the UI it is "Blogs and docs". */
+const sourceFromPlatform = (p: any): string => {
+  const n = String(p?.name ?? "");
+  if (n) return n === "Blogs" ? "Blogs and docs" : n;
+  return p?.type === "Blogs" ? "Blogs and docs" : String(p?.type ?? "Other");
+};
+
+export async function listLinkedAccounts(): Promise<LinkedAccount[]> {
+  if (USE_MOCKS) return listOf(await api(endpoints.accounts), ["data"]) as LinkedAccount[];
+  // The real "me" response lists linked accounts with the platform as an id, so match ids against the learner's platforms.
+  const [me, platforms]: any[] = await Promise.all([api(endpoints.me), api(endpoints.platforms)]);
+  const byId = new Map(listOf(platforms, ["data"]).map((p: any) => [String(p._id ?? p.id), p]));
+  const raw: any[] = me?.data?.linkedAccounts ?? me?.linkedAccounts ?? [];
+  return raw.map((a) => {
+    const ref = a.platform;
+    const doc = typeof ref === "object" && ref ? ref : byId.get(String(ref));
+    return { id: String(a._id ?? a.id), source: sourceFromPlatform(doc), username: String(a.platformUsername ?? ""), url: a.profileUrl || undefined };
+  });
+}
+
+export async function linkAccount(source: string, username: string, url?: string): Promise<void> {
+  const profileUrl = url?.trim() || undefined; // the backend rejects an empty string, so leave it out
+  if (USE_MOCKS) {
+    await api(endpoints.accounts, { method: "POST", body: { source, platformUsername: username.trim(), profileUrl } });
+    return;
+  }
+  const platforms = await api(endpoints.platforms);
+  const id = await platformId(source, listOf(platforms, ["data"]));
+  await api(endpoints.accounts, { method: "POST", body: { platformId: id, platformUsername: username.trim(), profileUrl } });
+}
+
+export async function unlinkAccount(id: string): Promise<void> {
+  await api(endpoints.account(id), { method: "DELETE" });
 }

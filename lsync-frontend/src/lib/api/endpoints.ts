@@ -8,9 +8,9 @@ export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:200
 
 /**
  * Demo mode: no backend needed. The app serves realistic sample data from the browser's storage so every
- * screen can be clicked through. Set NEXT_PUBLIC_USE_MOCKS=false to talk to the real API.
+ * screen can be clicked through. Demo is the default: only the exact value "false" switches to the real API, so a missing or mistyped variable can never leave a deployed site pointing at a server that is not there.
  */
-export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "false";
+export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS !== "false";
 
 export const endpoints = {
   // --- auth + user ---
@@ -21,7 +21,14 @@ export const endpoints = {
   profileUpdate: "/api/users/profile",
   privacy: "/api/users/privacy",
 
-  // --- NOT IN THE BACKEND YET (ask the backend team to add them) ---
+  changePassword: "/api/users/password",
+  deleteAccount: "/api/users/delete",
+  /** Linked platform accounts: POST to link, DELETE .../:id to unlink. They come back inside GET /api/users/me. */
+  accounts: "/api/users/accounts",
+  account: (id: string) => `/api/users/accounts/${encodeURIComponent(id)}`,
+  health: "/api/health",
+
+  // --- password reset (backend team's endpoint list, 20 Nov 2026) ---
   forgotPassword: "/api/auth/forgot-password",
   resetPassword: "/api/auth/reset-password",
 

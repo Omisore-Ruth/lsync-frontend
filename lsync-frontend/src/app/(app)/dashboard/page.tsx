@@ -77,7 +77,7 @@ function SourcesPanel({ state, open, onToggle }: { state: ReturnType<typeof useS
     <Card title="Your sources" subtitle={`${state.inUse} of ${SOURCES.length} in use`} action={<Button type="button" variant="outline" onClick={onToggle} aria-expanded={open} className="!px-4 !py-2 text-sm">{open ? "Hide sources" : "Add or manage sources"}</Button>}>
       <ul className="flex flex-wrap gap-2">
         {SOURCES.map((s) => {
-          const on = s.id === "GitHub" ? state.ghOn : (state.totals.get(s.id.toLowerCase())?.sessions ?? 0) > 0;
+          const on = s.id === "GitHub" ? state.ghOn : state.linked.has(s.id.toLowerCase()) || (state.totals.get(s.id.toLowerCase())?.sessions ?? 0) > 0;
           return (
             <li key={s.id} className={`flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-sm font-semibold ${on ? "border-success/30 bg-success-soft text-success" : "border-black/10 text-muted"}`}>
               <SourceBadge name={s.id} size={26} />

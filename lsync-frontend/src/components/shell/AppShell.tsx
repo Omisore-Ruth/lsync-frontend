@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { signOutState, useAuth } from "@/lib/auth/AuthProvider";
 import { USE_MOCKS } from "@/lib/api/endpoints";
 import { LogsProvider } from "@/lib/logs/LogsProvider";
 
@@ -38,7 +38,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const loggingOut = useRef(false);
 
   useEffect(() => {
-    if (status === "anonymous" && !loggingOut.current) {
+    if (status === "anonymous" && !loggingOut.current && !signOutState.deliberate) {
       router.replace(`/login?next=${encodeURIComponent(pathname)}`);
     }
   }, [status, pathname, router]);

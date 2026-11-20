@@ -1,4 +1,4 @@
-import { API_URL, USE_MOCKS } from "./endpoints";
+import { API_URL, endpoints, USE_MOCKS } from "./endpoints";
 import { mockRequest } from "./mock";
 import { readToken } from "@/lib/auth/token";
 
@@ -70,7 +70,7 @@ async function transport(path: string, method: string, body: unknown, init: Requ
 /** The free server sleeps when idle. A quiet request on page load wakes it while the person types. */
 export function wakeServer() {
   if (USE_MOCKS || typeof window === "undefined") return;
-  fetch(API_URL, { mode: "no-cors" }).catch(() => {});
+  fetch(`${API_URL}${endpoints.health}`, { mode: "no-cors" }).catch(() => {});
 }
 
 export async function api<T = unknown>(path: string, { body, auth = true, quiet401 = false, headers, method = "GET", ...init }: Options = {}): Promise<T> {
