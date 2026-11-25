@@ -204,7 +204,8 @@ export async function mockRequest(method: string, path: string, body: unknown, t
   if (pathname === endpoints.login && method === "POST") {
     const id = String(b.email ?? b.username ?? "").trim().toLowerCase();
     const user = db.users.find((u) => u.email === id || u.username.toLowerCase() === id);
-    if (!user || user.password !== b.password) return fail(401, "Incorrect email, username or password.");
+    if (!user) return fail(401, "No demo account with that email in this browser. Demo accounts are saved only in the browser where they were created, so use the demo login shown above or create a new account here.");
+    if (user.password !== b.password) return fail(401, "Incorrect password.");
     return ok({ success: true, token: `mock.${user.id}`, user: publicUser(user) });
   }
 

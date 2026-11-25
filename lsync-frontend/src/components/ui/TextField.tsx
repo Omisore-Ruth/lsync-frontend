@@ -17,6 +17,9 @@ export const TextField = forwardRef<HTMLInputElement, Props>(function TextField(
   const id = useId();
   const [shown, setShown] = useState(false);
   const isPassword = type === "password";
+  // Phone keyboards love to capitalise the first letter, "fix" words and add a space after a suggestion.
+  // That silently changes an email or password, which then looks like "wrong password". Turn it off for these fields.
+  const keyboardSafe = type === "email" || isPassword ? { autoCapitalize: "none", autoCorrect: "off", spellCheck: false } : {};
   const describedBy = [error ? `${id}-err` : null, hint ? `${id}-hint` : null].filter(Boolean).join(" ") || undefined;
 
   return (
@@ -34,6 +37,7 @@ export const TextField = forwardRef<HTMLInputElement, Props>(function TextField(
           className={`field w-full rounded-xl border bg-[#f7f5f6] transition-[border-color,box-shadow] duration-200 px-4 py-3.5 text-base text-ink placeholder:text-muted/70 ${
             isPassword ? "pr-12" : ""
           } ${error ? "border-danger" : "border-peach"}`}
+          {...keyboardSafe}
           {...rest}
         />
         {isPassword && (

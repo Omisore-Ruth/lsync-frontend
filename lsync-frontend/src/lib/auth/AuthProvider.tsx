@@ -117,15 +117,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback<AuthContextValue["login"]>(
     async (identifier, password, remember) => {
       // The backend's login route only accepts an email (a username is rejected with "Valid email is required").
-      const body = { email: identifier.trim(), password };
-      const data = await api(endpoints.login, { method: "POST", body, auth: false });
+      const typed = identifier.trim();
+      const tryLogin = (email: string) => api(endpoints.login, { method: "POST", body: { email, password }, auth: false });
+      let data: unknown;
+      try {
+        data = await tryLogin(typed);
+      } catch (e) {
+        // Accounts made before emails were lowercased may be stored exactly as typed, so try as typed first. If the server
+        // says no and the email has capital letters (a phone keyboard may have added one), try once more in lowercase.
+        const lower = typed.toLowerCase();
+        if (e instanceof ApiError && (e.status === 400 || e.status === 401) && lower !== typed) data = await tryLogin(lower);
+        else throw e;
+      }
       await finishAuth(data, remember);
     },
     [finishAuth],
   );
 
   const register = useCallback<AuthContextValue["register"]>(
-    async ({ fullName, username, email, password }) => {
+    async ({ fullName, username, email: rawEmail, password }) => {
+      const email = rawEmail.trim().toLowerCase(); // one way of writing it, so signing in later always matches
       // The real backend replied "Name is required", so it wants `name`. `fullName` is kept for the demo backend.
       const data = await api(endpoints.register, {
         method: "POST",

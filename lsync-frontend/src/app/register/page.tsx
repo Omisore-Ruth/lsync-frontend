@@ -99,7 +99,7 @@ export default function RegisterPage() {
         <div aria-hidden className="drift absolute -left-40 top-24 -z-10 size-[760px] rounded-full bg-[#f7dcc8]" style={{ "--d": "14s" } as React.CSSProperties} />
         <div aria-hidden className="drift absolute -left-10 top-16 -z-10 size-[620px] rounded-full bg-[#f9cba8]" style={{ "--d": "11s" } as React.CSSProperties} />
         <div aria-hidden className="drift absolute left-20 top-40 -z-10 size-[460px] rounded-full bg-[#ffb584]" style={{ "--d": "8s" } as React.CSSProperties} />
-        <div className="rise self-start"><Logo className="h-11" /></div>
+        <div className="rise self-start"><Link href="/" aria-label="LSync home"><Logo className="h-11" /></Link></div>
         <div className="mx-auto my-8 w-full max-w-[440px] lg:my-auto">
           <h1 style={{ "--i": 1 } as React.CSSProperties} className="rise mb-8 text-3xl font-bold text-ink sm:text-4xl">Create account</h1>
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
@@ -125,7 +125,7 @@ export default function RegisterPage() {
             />
             <PasswordMeter value={password} />
             <Checkbox className="rise" style={{ "--i": 6 } as React.CSSProperties} error={errors.terms?.message} {...register("terms")}>
-              {/* Terms / Privacy pages don't exist yet */}I agree to the <strong className="text-primary">Terms</strong> and <strong className="text-primary">Privacy Policy</strong>
+              {/* Terms / Privacy pages don't exist yet */}I agree to the <strong className="text-violet-deep">Terms</strong> and <strong className="text-violet-deep">Privacy Policy</strong>
             </Checkbox>
             <Button type="submit" loading={isSubmitting} style={{ "--i": 7 } as React.CSSProperties} className="rise mt-2 w-full">
               Sign up
@@ -136,6 +136,9 @@ export default function RegisterPage() {
               <Link href="/login" className="font-bold text-primary hover:underline">
                 Sign in
               </Link>
+            </p>
+            <p className="text-center text-sm text-muted">
+              <Link href="/" className="font-semibold underline-offset-2 hover:underline">About LSync</Link> · <Link href="/blog" className="font-semibold underline-offset-2 hover:underline">Read the blog</Link>
             </p>
           </form>
         </div>

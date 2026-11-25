@@ -11,7 +11,7 @@ export function Heatmap({ columns, monthLabels, summary }: { columns: Cell[][]; 
   const days = ["Mon", "", "Wed", "", "Fri", "", "Sun"];
   return (
     <div>
-      <div className="overflow-x-auto pb-1">
+      <div className="overflow-x-auto pb-1" tabIndex={0} role="region" aria-label="Learning heatmap. Scroll sideways to see earlier weeks.">
         <div role="img" aria-label={summary} className="flex gap-2">
           <div aria-hidden className="grid pt-[18px] text-[11px] text-muted" style={{ gridTemplateRows: `repeat(7, ${CELL}px)`, rowGap: GAP }}>
             {days.map((d, i) => (

@@ -57,7 +57,7 @@ function ConnectHero({ first, inUse }: { first: string; inUse: number }) {
         <div aria-hidden className="relative mx-auto hidden size-60 md:block">
           <span className="absolute inset-6 rounded-full border border-dashed border-white/30" />
           <span className="absolute left-1/2 top-1/2 grid size-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-2xl bg-white shadow-[0_0_40px_rgba(185,172,255,.6)]">
-            <Image src="/brand/logo-mark.png" alt="" width={48} height={48} />
+            <Image src="/brand/logo-mark.webp" alt="" width={48} height={48} />
           </span>
           <div className="orbit absolute inset-0">
             {ORBIT.map((o) => (

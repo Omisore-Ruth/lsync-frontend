@@ -105,7 +105,7 @@ export function SourceGrid({ state, variant = "full" }: { state: ReturnType<type
         <div className="flex items-center gap-3">
           <SourceBadge name={s.id} />
           <div className="min-w-0">
-            <h3 className="font-bold text-ink">{s.id}</h3>
+            <h2 className="font-bold text-ink">{s.id}</h2>
             <p className="text-sm text-muted">{s.blurb}</p>
           </div>
         </div>

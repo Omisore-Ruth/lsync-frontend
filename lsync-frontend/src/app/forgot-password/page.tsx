@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
       setSentTo(v.email);
     } catch (e) {
       if (e instanceof ApiError && e.status === 404) {
-        setServerError("Password reset isn't switched on for the live server yet. Please ask the backend team to add it.");
+        setServerError(process.env.NODE_ENV !== "production" ? "Password reset isn't switched on for the server yet. Ask the backend team to add it." : "We can't send reset emails right now. Please try again later.");
       } else {
         setServerError(e instanceof Error ? e.message : "Something went wrong. Please try again.");
       }

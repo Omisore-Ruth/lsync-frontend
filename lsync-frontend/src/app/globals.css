@@ -20,12 +20,12 @@
   --color-primary-soft: #ab72d4; /* design's original button colour */
   --color-ink: #1b1140; /* headings, wordmark navy */
   --color-body: #4a4466; /* body text */
-  --color-muted: #6d6889; /* helper text (AA on white and page bg) */
+  --color-muted: #645f80; /* helper text (AA, 5:1 or better, on white, the page background and the lilac tags) */
   --color-page: #e9ebf3; /* auth + app background */
   --color-card: #fdf9fa; /* auth card */
   --color-peach: #fcaf7b; /* card borders */
   --color-peach-soft: #ffe9d6;
-  --color-orange-link: #c2570c; /* "Create an account" link (AA on card) */
+  --color-orange-link: #a94a07; /* "Create an account" link (AA on the card and on peach) */
   --color-success: #0f7b5f;
   --color-success-soft: #dff5ec;
   --color-danger: #b42318;
@@ -57,7 +57,7 @@ body {
   display: grid;
   place-items: center;
   background: var(--color-page);
-  transition: opacity 0.45s ease, visibility 0.45s ease;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 #preloader[data-done="true"] {
   opacity: 0;
@@ -84,26 +84,26 @@ html.no-preload #preloader {
   left: 0;
   top: 0;
   width: 35.6%;
-  animation: pl-mark 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both;
+  animation: pl-mark 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) 0.02s both;
 }
 .pl-word {
   left: 39.7%;
   top: 14.4%;
   width: 60.2%;
-  animation: pl-word 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.45s both;
+  animation: pl-word 0.5s cubic-bezier(0.65, 0, 0.35, 1) 0.28s both;
 }
 .pl-tag {
   left: 39.8%;
   top: 75.9%;
   width: 60.3%;
-  animation: pl-tag 0.5s ease-out 1s both;
+  animation: pl-tag 0.35s ease-out 0.65s both;
 }
 .pl-bar {
   left: 40.6%;
   top: 92.2%;
   width: 28.7%;
   transform-origin: left center;
-  animation: pl-bar 0.55s cubic-bezier(0.65, 0, 0.35, 1) 1.2s both;
+  animation: pl-bar 0.4s cubic-bezier(0.65, 0, 0.35, 1) 0.8s both;
 }
 
 @keyframes pl-mark {
@@ -254,3 +254,28 @@ html:not(.ready) :is(.rise, .slide-in, .pop, .sd-tile, .sd-orbit, .sd-face, .sd-
 .orbit { animation: spin-slow 38s linear infinite; }
 .orbit-item { animation: spin-back 38s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .orb-ring, .orb-core, .orbit, .orbit-item { animation: none !important; } }
+
+/* ---------- Public site: soft background washes ---------- */
+@keyframes blob-a { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(40px, 24px); } }
+@keyframes blob-b { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, 30px); } }
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .blob-a { animation: blob-a 18s ease-in-out infinite; }
+  .blob-b { animation: blob-b 22s ease-in-out infinite; }
+}
+
+/* ---------- Lily, the voice guide ---------- */
+@keyframes lily-bar { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+.lily-bar { transform-origin: bottom; animation: lily-bar 0.9s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 130ms); }
+@keyframes lily-ring { 0% { transform: scale(0.95); opacity: 0.65; } 100% { transform: scale(1.55); opacity: 0; } }
+.lily-ring { animation: lily-ring 1.8s ease-out infinite; }
+@keyframes lily-pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+.lily-panel { animation: lily-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes lily-nudge { 0%, 100% { transform: none; } 50% { transform: translateY(-4px); } }
+.lily-nudge { animation: lily-nudge 2.4s ease-in-out 3; } /* a few nudges to be noticed, then still */
+@media (prefers-reduced-motion: reduce) {
+  .lily-bar, .lily-ring, .lily-panel, .lily-nudge { animation: none; }
+  .lily-bar { transform: scaleY(0.7); }
+}
+
+/* Blog reading progress */
+.read-progress { transform-origin: left center; transform: scaleX(var(--p, 0)); }

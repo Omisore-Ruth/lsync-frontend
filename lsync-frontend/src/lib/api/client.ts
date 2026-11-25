@@ -50,9 +50,10 @@ async function transport(path: string, method: string, body: unknown, init: Requ
     });
   } catch {
     window.clearTimeout(timer);
-    if (ctrl.signal.aborted) throw new ApiError("The server took too long to answer. It may still be waking up, so please try again in a moment.", 0);
+    if (ctrl.signal.aborted) throw new ApiError("This is taking longer than usual. Please try again in a moment.", 0);
     // Network failure, server down, or the browser blocked the request (CORS)
-    throw new ApiError("We couldn't reach the server. If it was asleep, wait a minute and try again. Otherwise check your connection, or ask the backend team to allow this site (CORS).", 0);
+    const hint = process.env.NODE_ENV !== "production" ? " (Developer note: if your connection is fine, the backend may be asleep or may need to allow this site's address, which is called CORS.)" : "";
+    throw new ApiError(`We couldn't connect to LSync. Please check your internet connection and try again in a moment.${hint}`, 0);
   }
   window.clearTimeout(timer);
   let data: unknown = null;
@@ -119,7 +120,7 @@ function messageFrom(data: unknown, status: number): string {
   const found = findMessage(data);
   if (found) return found;
   if (status === 401) return "Those details don't match an account. Check them and try again.";
-  if (status === 404) return "The server doesn't have that address (error 404). Check the route paths in src/lib/api/endpoints.ts.";
+  if (status === 404) return process.env.NODE_ENV !== "production" ? "The server doesn't have that address (error 404). Check the route paths in src/lib/api/endpoints.ts." : "We couldn't find what you asked for. Please try again.";
   if (status === 409) return "An account with those details already exists.";
   if (status >= 500) return "Something went wrong on the server. Please try again shortly.";
   // While developing, show what the server actually said so a wrong field name is easy to spot.

@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 
 const SESSION_KEY = "lsync-preloaded";
-const MIN_VISIBLE_MS = 1900; // long enough for the full logo sequence to finish
-const MIN_VISIBLE_REDUCED_MS = 500;
-const MAX_VISIBLE_MS = 5000; // never block the app longer than this
+const MIN_VISIBLE_MS = 1300; // long enough for the full logo sequence (about 1.2s) to finish
+const MIN_VISIBLE_REDUCED_MS = 400;
+const MAX_VISIBLE_MS = 2500; // never block the app longer than this
 
 /**
  * Full-screen logo animation shown once per browser session.
@@ -13,7 +13,8 @@ const MAX_VISIBLE_MS = 5000; // never block the app longer than this
  * - The markup is server-rendered, so it is painted with the first HTML, before any JS loads.
  * - An inline script in <head> (see PRELOAD_SCRIPT) adds `no-preload` to <html> when the
  *   preloader already ran this session, so returning navigations never flash it.
- * - It leaves when the page has finished loading AND the minimum time has passed.
+ * - It leaves once the minimum time has passed. It does not wait for every image and script on the page to finish
+ *   (the old "load" wait made slow connections stare at the logo for seconds). The page is already interactive by then.
  */
 export function Preloader() {
   const ref = useRef<HTMLDivElement>(null);
@@ -46,17 +47,11 @@ export function Preloader() {
       }
     };
 
-    const whenReady = () => {
-      const wait = Math.max(0, minMs - (performance.now() - start));
-      window.setTimeout(finish, wait);
-    };
-
-    if (document.readyState === "complete") whenReady();
-    else window.addEventListener("load", whenReady, { once: true });
-
+    const wait = Math.max(0, minMs - (performance.now() - start));
+    const timer = window.setTimeout(finish, wait);
     const hardStop = window.setTimeout(finish, MAX_VISIBLE_MS);
     return () => {
-      window.removeEventListener("load", whenReady);
+      window.clearTimeout(timer);
       window.clearTimeout(hardStop);
     };
   }, []);
@@ -65,13 +60,13 @@ export function Preloader() {
     <div id="preloader" ref={ref} role="status" aria-label="Loading LSync">
       <div className="pl-logo" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="pl-mark" src="/brand/logo-mark.png" alt="" />
+        <img className="pl-mark" src="/brand/logo-mark.webp" alt="" width={360} height={336} decoding="async" fetchPriority="high" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="pl-word" src="/brand/logo-wordmark.png" alt="" />
+        <img className="pl-word" src="/brand/logo-wordmark.webp" alt="" width={640} height={203} decoding="async" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="pl-tag" src="/brand/logo-tagline.png" alt="" />
+        <img className="pl-tag" src="/brand/logo-tagline.webp" alt="" width={640} height={42} decoding="async" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="pl-bar" src="/brand/logo-bar.png" alt="" />
+        <img className="pl-bar" src="/brand/logo-bar.webp" alt="" width={355} height={13} decoding="async" />
       </div>
     </div>
   );

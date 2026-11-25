@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/montserrat";
 import "./globals.css";
+import { LilyLoader } from "@/components/lily/LilyLoader";
 import { Preloader, PRELOAD_SCRIPT } from "@/components/Preloader";
 import { AuthProvider } from "@/lib/auth/AuthProvider";
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <Preloader />
         <AuthProvider>{children}</AuthProvider>
+        <LilyLoader />
       </body>
     </html>
   );

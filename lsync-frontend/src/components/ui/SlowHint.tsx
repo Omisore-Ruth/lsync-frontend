@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-/** Shown under a submit button that has been waiting a while (the free server may be waking up). */
+/** Shown under a submit button that has been waiting a while (a sleeping server can take up to a minute to wake). */
 export function SlowHint() {
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -12,7 +12,7 @@ export function SlowHint() {
   if (!show) return null;
   return (
     <p role="status" className="text-center text-sm text-body">
-      Still working. The server may be waking up, and the first request can take up to a minute.
+      Still working. This can take a little longer the first time, thank you for waiting.
     </p>
   );
 }

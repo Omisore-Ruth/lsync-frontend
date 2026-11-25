@@ -91,7 +91,7 @@ export default function LoginPage() {
   return (
     <main className="grid min-h-dvh grid-cols-1 gap-6 bg-page p-4 lg:grid-cols-[1.05fr_1fr] lg:p-3">
       <section className="flex flex-col px-2 py-4 sm:px-8 lg:px-12">
-        <div className="rise self-start"><Logo className="h-11 sm:h-12" /></div>
+        <div className="rise self-start"><Link href="/" aria-label="LSync home"><Logo className="h-11 sm:h-12" /></Link></div>
         <div style={{ "--i": 1 } as React.CSSProperties} className="rise mx-auto my-8 w-full max-w-[520px] rounded-[28px] border-[1.5px] border-peach bg-card p-7 sm:p-10 lg:my-auto">
           <h1 className="text-3xl font-bold text-ink sm:text-4xl">Welcome back</h1>
           <p className="mb-8 mt-3 text-base text-body">{copy.signInSubtitle}</p>
@@ -106,6 +106,9 @@ export default function LoginPage() {
           </p>
           <p className="my-4 text-center text-sm font-bold text-ink">OR</p>
           <SocialButtons />
+          <p className="mt-6 text-center text-sm text-muted">
+            <Link href="/" className="font-semibold underline-offset-2 hover:underline">About LSync</Link> · <Link href="/blog" className="font-semibold underline-offset-2 hover:underline">Read the blog</Link>
+          </p>
         </div>
       </section>
 
