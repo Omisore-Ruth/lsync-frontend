@@ -2,7 +2,7 @@
 
 import { MailCheck } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { FormAlert } from "@/components/ui/FormAlert";
 import { SlowHint } from "@/components/ui/SlowHint";
 import { TextField } from "@/components/ui/TextField";
-import { api, ApiError } from "@/lib/api/client";
+import { api, ApiError, wakeServer } from "@/lib/api/client";
 import { endpoints, USE_MOCKS } from "@/lib/api/endpoints";
 
 const schema = z.object({ email: z.string().trim().email("Enter a valid email address.") });
@@ -23,6 +23,11 @@ export default function ForgotPasswordPage() {
   const [demoToken, setDemoToken] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
 
+  // Wake the (sleeping) free server while the person types their email.
+  useEffect(() => {
+    wakeServer();
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -32,12 +37,14 @@ export default function ForgotPasswordPage() {
   async function onSubmit(v: Values) {
     setServerError(null);
     try {
-      const data = await api<{ demoToken?: string | null }>(endpoints.forgotPassword, { method: "POST", body: { email: v.email }, auth: false });
+      const data = await api<{ demoToken?: string | null }>(endpoints.forgotPassword, { method: "POST", body: { email: v.email }, auth: false, timeoutMs: 25000 });
       setDemoToken(USE_MOCKS ? (data?.demoToken ?? null) : null);
       setSentTo(v.email);
     } catch (e) {
       if (e instanceof ApiError && e.status === 404) {
         setServerError(process.env.NODE_ENV !== "production" ? "Password reset isn't switched on for the server yet. Ask the backend team to add it." : "We can't send reset emails right now. Please try again later.");
+      } else if (e instanceof ApiError && e.status === 0 && /longer than usual/i.test(e.message)) {
+        setServerError("We couldn't confirm that the email was sent. If it doesn't arrive in a few minutes (check your spam folder too), please try again.");
       } else {
         setServerError(e instanceof Error ? e.message : "Something went wrong. Please try again.");
       }

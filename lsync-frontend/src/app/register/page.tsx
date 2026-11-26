@@ -111,8 +111,8 @@ export default function RegisterPage() {
               )}
             </FormAlert>
             <TextField className="rise" style={{ "--i": 2 } as React.CSSProperties} label="Full name" autoComplete="name" error={errors.fullName?.message} {...register("fullName")} />
-            <TextField className="rise" style={{ "--i": 3 } as React.CSSProperties} label="Username" autoComplete="username" autoCapitalize="none" hint="At least 5 characters: letters, numbers and underscores." error={errors.username?.message} {...register("username")} />
-            <TextField className="rise" style={{ "--i": 4 } as React.CSSProperties} label="Email" type="email" autoComplete="email" error={errors.email?.message} {...register("email")} />
+            <TextField className="rise" style={{ "--i": 3 } as React.CSSProperties} label="Username" autoComplete="off" autoCapitalize="none" hint="At least 5 characters: letters, numbers and underscores." error={errors.username?.message} {...register("username")} />
+            <TextField className="rise" style={{ "--i": 4 } as React.CSSProperties} label="Email" type="email" autoComplete="username" error={errors.email?.message} {...register("email")} />
             <TextField
               className="rise"
               style={{ "--i": 5 } as React.CSSProperties}

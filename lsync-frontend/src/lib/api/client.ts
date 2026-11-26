@@ -19,6 +19,8 @@ type Options = Omit<RequestInit, "body"> & {
   auth?: boolean;
   /** Don't treat a 401 as "session ended". Use for probes like "is GitHub connected?". */
   quiet401?: boolean;
+  /** Give up sooner than the usual 70 seconds (for example, a request that should not need the server to wake up). */
+  timeoutMs?: number;
 };
 
 /** Fired on any 401 from an authenticated call so the AuthProvider can sign the user out. */
@@ -26,7 +28,7 @@ export const UNAUTHORIZED_EVENT = "lsync:unauthorized";
 
 type Raw = { ok: boolean; status: number; data: unknown };
 
-async function transport(path: string, method: string, body: unknown, init: RequestInit, token: string | null): Promise<Raw> {
+async function transport(path: string, method: string, body: unknown, init: RequestInit, token: string | null, timeoutMs = 70000): Promise<Raw> {
   if (USE_MOCKS) {
     const r = await mockRequest(method, path, body, token);
     return { ok: r.status < 400, status: r.status, data: r.data };
@@ -34,7 +36,7 @@ async function transport(path: string, method: string, body: unknown, init: Requ
   let res: Response;
   // Give up after 70s so the button never spins forever (the free server can take about a minute to wake).
   const ctrl = new AbortController();
-  const timer = window.setTimeout(() => ctrl.abort(), 70000);
+  const timer = window.setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     res = await fetch(`${API_URL}${path}`, {
       ...init,
@@ -74,9 +76,9 @@ export function wakeServer() {
   fetch(`${API_URL}${endpoints.health}`, { mode: "no-cors" }).catch(() => {});
 }
 
-export async function api<T = unknown>(path: string, { body, auth = true, quiet401 = false, headers, method = "GET", ...init }: Options = {}): Promise<T> {
+export async function api<T = unknown>(path: string, { body, auth = true, quiet401 = false, timeoutMs, headers, method = "GET", ...init }: Options = {}): Promise<T> {
   const token = auth ? readToken() : null;
-  const res = await transport(path, method, body, { ...init, headers }, token);
+  const res = await transport(path, method, body, { ...init, headers }, token, timeoutMs);
   if (!res.ok) {
     if (res.status === 401 && auth && !quiet401 && typeof window !== "undefined") {
       window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));

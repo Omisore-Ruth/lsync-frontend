@@ -22,7 +22,7 @@ import { useAuth } from "@/lib/auth/AuthProvider";
 import { copy } from "@/lib/copy";
 
 const schema = z.object({
-  identifier: z.string().trim().min(1, "Enter your email.").email("Enter the email you signed up with."),
+  identifier: z.string().trim().min(1, "Enter your email.").refine((v) => v.includes("@"), "That looks like a username. Sign in with the email you registered with, for example name@gmail.com.").email("Enter the email you signed up with, for example name@gmail.com."),
   password: z.string().min(1, "Enter your password."),
   remember: z.boolean(),
 });
@@ -71,7 +71,7 @@ function LoginForm() {
         </Banner>
       )}
       <FormAlert message={params.get("expired") ? "Your session ended. Please sign in again." : serverError} />
-      <TextField className="rise" style={{ "--i": 3 } as React.CSSProperties} label="Email" type="email" autoComplete="email" autoCapitalize="none" placeholder="you@example.com" error={errors.identifier?.message} {...register("identifier")} />
+      <TextField className="rise" style={{ "--i": 3 } as React.CSSProperties} label="Email" type="email" autoComplete="username" autoCapitalize="none" placeholder="you@example.com" error={errors.identifier?.message} {...register("identifier")} />
       <TextField className="rise" style={{ "--i": 4 } as React.CSSProperties} label="Password" type="password" autoComplete="current-password" placeholder="Your password" error={errors.password?.message} {...register("password")} />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Checkbox {...register("remember")}>Keep me signed in</Checkbox>
