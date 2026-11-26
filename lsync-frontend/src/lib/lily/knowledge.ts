@@ -30,7 +30,7 @@ export const WAKE_REPLIES = ["Yes?", "I'm here.", "Go ahead, I'm listening."];
 
 export function welcomeText(canListen: boolean): string {
   const close = canListen
-    ? "Whenever you need anything, just say, Hey Lily, and I'll be right here. Tap the little microphone to switch that on."
+    ? "Tap the little microphone once and allow it, then you can just say, Hey Lily, and I'll be right here."
     : "Whenever you need anything, just tap me, and I'll be right here.";
   return `Hi, I'm Lily. Welcome to LSync, your unified learning portfolio. If you learn on YouTube, Coursera, Udemy, edX, GitHub, or just by reading, LSync brings it together in one place, so you can see your progress, organise your skills, and choose what to share. Take a look around, or tap a platform to see how it works. ${close}`;
 }
@@ -206,6 +206,25 @@ export const INTENTS: Intent[] = [
     strong: [/\bhelp me\b/i, /\bwhat can you do\b/i],
     answer: HELP,
   },
+  {
+    id: "mic",
+    match: [/\bmic(rophone)?\b/i, /\bvoice\b/i, /\bspeak(ing)? to you\b/i, /\btalk to you\b/i],
+    strong: [/\bhey lily\b/i, /\bwake (word|you|up)\b/i, /\bhow (do|can) i (talk|speak)\b/i, /\bnot (hearing|listening)\b/i],
+    answer: "Tap the little microphone in my panel once and allow it when your browser asks. After that, just say, Hey Lily, and then your question. This works in Chrome and Edge. In other browsers, tap or type instead, and I'll answer the same way.",
+    more: "If I don't wake up, check that the microphone isn't blocked. Click the lock icon in the address bar, allow the microphone, and try again. I listen only while this tab is open.",
+  },
+  {
+    id: "delete",
+    match: [/\bdelete\b/i, /\bremove (my|the) (account|data)\b/i, /\bclose (my )?account\b/i, /\bleave\b/i],
+    strong: [/\bdelete (my )?account\b/i, /\bdelete my (data|information)\b/i],
+    answer: "You can delete your account yourself. Sign in, open your profile, and use the delete option at the bottom. You will be asked to confirm first.",
+  },
+  {
+    id: "extension",
+    match: [/\bextension\b/i, /\bchrome\b/i, /\bbrowser (add.?on|plugin)\b/i, /\bwatch (history|activity|events?)\b/i],
+    strong: [/\bchrome extension\b/i],
+    answer: "The team has been working on a Chrome extension that can record the learning videos you watch. I don't have the details yet, so I won't guess. Ask the team for the latest on it.",
+  },
   { id: "me", match: [/\byour name\b/i], strong: [/\bwho are you\b/i, /\bare you (a |an )?(real|human|person|ai|robot|bot)\b/i], answer: "I'm Lily, LSync's voice guide. I'm an automated assistant, not a person. I can tell you about LSync, how it works, and where to start." },
   { id: "thanks", match: [/\bthank/i, /\bcheers\b/i, /\bappreciate\b/i, /\bgreat\b/i, /\bnice\b/i], answer: "You're welcome. I'm here if you need anything else." },
   { id: "hello", match: [/^\s*(hi|hello|hey|good (morning|afternoon|evening)|how are you)\b/i], answer: "Hi there. What would you like to know about LSync?" },
@@ -228,7 +247,20 @@ function score(intent: Intent, text: string): number {
  * so "do I have to pay before using the platform?" is about price, not platforms.
  * `last` is the intent she answered before, so "tell me more" can continue it.
  */
-export function matchIntent(text: string, last?: string | null): Intent | null {
+/** Smooths over how people really type: extra spaces, stretched letters ("heyyy"), and a few common slips. */
+function tidy(text: string): string {
+  return text
+    .replace(/(.)\1{2,}/g, "$1")
+    .replace(/\bplz\b|\bpls\b/gi, "please")
+    .replace(/\bwat\b/gi, "what")
+    .replace(/\bwht\b/gi, "what")
+    .replace(/\bl\s?sync\b|\bel sync\b/gi, "lsync")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function matchIntent(rawText: string, last?: string | null): Intent | null {
+  const text = tidy(rawText);
   if (last && MORE.test(text)) {
     const prev = INTENTS.find((i) => i.id === last);
     if (prev?.more) return { id: `${prev.id}-more`, match: [], answer: prev.more };

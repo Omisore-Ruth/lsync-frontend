@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogOut, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ChangePasswordCard } from "@/components/profile/ChangePasswordCard";
@@ -17,7 +17,9 @@ import { TextAreaField } from "@/components/ui/SelectField";
 import { TextField } from "@/components/ui/TextField";
 import { USE_MOCKS } from "@/lib/api/endpoints";
 import { resetMockData } from "@/lib/api/mock";
-import { getProfile, saveProfile } from "@/lib/api/services";
+import { getProfile, saveAvatarToServer, saveProfile } from "@/lib/api/services";
+import { Avatar } from "@/components/ui/Avatar";
+import { fileToAvatar, useAvatar, writeAvatar } from "@/lib/avatar";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { useAsync } from "@/lib/hooks/useAsync";
 
@@ -35,11 +37,6 @@ const TABS = [
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 
-function initials(name?: string) {
-  const p = (name ?? "").trim().split(/\s+/).filter(Boolean);
-  return ((p[0]?.[0] ?? "") + (p[1]?.[0] ?? "")).toUpperCase() || "?";
-}
-
 export default function ProfilePage() {
   const router = useRouter();
   const { user, updateUser, logout } = useAuth();
@@ -52,6 +49,10 @@ export default function ProfilePage() {
   const [visBusy, setVisBusy] = useState(false);
   const [pendingPublic, setPendingPublic] = useState<boolean | null>(null);
   const [visError, setVisError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoMsg, setPhotoMsg] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
+  const who = (user?.id as string | undefined) ?? user?.email ?? user?.username;
 
   const p = profile.data;
   const list = interests ?? p?.interests ?? [];
@@ -103,6 +104,33 @@ export default function ProfilePage() {
     }
   }
 
+  const photo = useAvatar(who, p?.avatar);
+
+  async function onPickPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // lets the same file be chosen again later
+    if (!file || !who) return;
+    setPhotoBusy(true);
+    setPhotoMsg(null);
+    try {
+      const dataUrl = await fileToAvatar(file);
+      writeAvatar(who, dataUrl); // shows everywhere straight away
+      const sent = await saveAvatarToServer(dataUrl);
+      setPhotoMsg({ tone: "ok", text: sent ? "Your photo is saved." : "Your photo is saved on this device." });
+    } catch (err) {
+      setPhotoMsg({ tone: "error", text: err instanceof Error ? err.message : "We couldn't use that picture." });
+    } finally {
+      setPhotoBusy(false);
+    }
+  }
+
+  async function onRemovePhoto() {
+    if (!who) return;
+    writeAvatar(who, null);
+    await saveAvatarToServer(null);
+    setPhotoMsg({ tone: "ok", text: "Photo removed." });
+  }
+
   const isPublic = pendingPublic ?? p?.isPublic ?? false;
   const displayName = p?.fullName || user?.fullName || user?.username;
   const portfolioPath = p?.username ? `/portfolio/${p.username}` : null;
@@ -141,16 +169,25 @@ export default function ProfilePage() {
           <Card title="Profile details">
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
               <div className="flex flex-wrap items-center gap-4">
-                <span aria-hidden className="grid size-20 place-items-center rounded-full bg-indigo-brand text-2xl font-bold text-white">
-                  {initials(displayName)}
-                </span>
+                <Avatar name={displayName} src={photo} className="size-20 text-2xl" />
                 <div>
-                  <div className="flex gap-2">
-                    <Button type="button" variant="outline" disabled title="Photo upload is coming soon" className="!py-2 text-sm">
-                      Change photo
+                  <input ref={fileRef} id="photo-input" type="file" accept="image/*" className="sr-only" onChange={onPickPhoto} tabIndex={-1} />
+                  <div className="flex flex-wrap gap-2">
+                    <Button type="button" variant="outline" loading={photoBusy} onClick={() => fileRef.current?.click()} className="!py-2 text-sm">
+                      {photo ? "Change photo" : "Upload photo"}
                     </Button>
+                    {photo && (
+                      <Button type="button" variant="outline" onClick={() => void onRemovePhoto()} className="!py-2 text-sm">
+                        Remove photo
+                      </Button>
+                    )}
                   </div>
-                  <p className="mt-1.5 text-sm text-muted">Photo upload is coming soon. Your initials are used for now.</p>
+                  <p className="mt-1.5 text-sm text-muted">JPG, PNG or WebP. We crop it to a square and make it small, so it loads fast.</p>
+                  {photoMsg && (
+                    <p role={photoMsg.tone === "error" ? "alert" : "status"} className={`mt-1.5 text-sm font-medium ${photoMsg.tone === "error" ? "text-danger" : "text-success"}`}>
+                      {photoMsg.text}
+                    </p>
+                  )}
                 </div>
               </div>
 

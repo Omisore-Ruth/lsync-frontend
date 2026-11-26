@@ -192,6 +192,7 @@ function toProfile(d: any): Profile {
     about: clean(r.about ?? r.bio),
     interests: Array.isArray(r.interests) ? r.interests.map(String) : [],
     isPublic: r.isPublic === undefined ? false : Boolean(r.isPublic),
+    avatar: typeof (r.avatar ?? r.avatarUrl ?? r.profilePicture) === "string" ? (r.avatar ?? r.avatarUrl ?? r.profilePicture) : undefined,
   };
 }
 
@@ -211,6 +212,21 @@ export async function saveProfile(patch: Partial<Omit<Profile, "email" | "userna
   if (Object.keys(body).length) await api(endpoints.profileUpdate, { method: "PUT", body });
   if (patch.isPublic !== undefined) await api(endpoints.privacy, { method: "PUT", body: { isPublic: patch.isPublic } });
   return getProfile();
+}
+
+/**
+ * Sends the picture to the backend as the `avatar` field of PUT /api/users/profile, which the backend lists as accepted.
+ * The picture is already saved on this device before this runs, so if the server says no the person still sees their photo.
+ * Returns whether the server took it.
+ */
+export async function saveAvatarToServer(dataUrl: string | null): Promise<boolean> {
+  if (USE_MOCKS) return true;
+  try {
+    await api(endpoints.profileUpdate, { method: "PUT", body: { avatar: dataUrl ?? "" }, quiet401: true });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /* ---------- account: password, deletion, linked platform accounts ---------- */

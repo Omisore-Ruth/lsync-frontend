@@ -8,6 +8,8 @@ import { Logo } from "@/components/brand/Logo";
 import { signOutState, useAuth } from "@/lib/auth/AuthProvider";
 import { USE_MOCKS } from "@/lib/api/endpoints";
 import { LogsProvider } from "@/lib/logs/LogsProvider";
+import { Avatar } from "@/components/ui/Avatar";
+import { useAvatar } from "@/lib/avatar";
 
 // Exactly Dan's menu. Adding logs lives inside Activity, linking sources lives on the Dashboard,
 // and peer insights is reached from the glowing orb on the Dashboard (so it is not listed here).
@@ -19,11 +21,6 @@ const nav = [
   { href: "/profile", label: "Profile", icon: UserRound },
 ];
 
-function initials(name?: string) {
-  const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);
-  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
-}
-
 /** Sidebar on desktop, slide-in drawer on mobile. Also the route guard for everything inside. */
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { user, status, logout } = useAuth();
@@ -31,6 +28,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   // The drawer is "open for" one pathname, so it closes by itself when the route changes.
   const [openFor, setOpenFor] = useState<string | null>(null);
+  const photo = useAvatar((user?.id as string | undefined) ?? user?.email ?? user?.username);
   const open = openFor === pathname;
   const setOpen = (v: boolean) => setOpenFor(v ? pathname : null);
 
@@ -78,7 +76,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </nav>
       <div className="mt-auto flex flex-col gap-3">
         <Link href="/profile" className="flex items-center gap-3 rounded-2xl bg-white/15 p-3 hover:bg-white/20">
-          <span className="grid size-11 shrink-0 place-items-center rounded-full bg-indigo-brand text-sm font-bold">{initials(user?.fullName ?? user?.username)}</span>
+          <Avatar name={user?.fullName ?? user?.username} src={photo} className="size-11 text-sm" />
           <span className="min-w-0">
             <span className="block truncate text-sm font-bold">{name}</span>
             <span className="block text-sm text-white">Profile and settings</span>
@@ -128,7 +126,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <main className="min-w-0 p-4 sm:p-6 lg:p-5">
         {USE_MOCKS && (
-          <p className="mb-4 inline-flex rounded-full bg-warn-soft px-3 py-1 text-xs font-bold text-[#7a4a00]">Demo data: nothing here is saved to a server</p>
+          <p className="mb-4 inline-flex rounded-full bg-warn-soft px-3 py-1 text-xs font-bold text-[#7a4a00]">Demo mode: what you add stays in this browser</p>
         )}
         {children}
       </main>

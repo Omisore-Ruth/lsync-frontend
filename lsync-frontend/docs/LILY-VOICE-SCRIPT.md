@@ -1,5 +1,8 @@
 # Lily's voice script
 
+> **Pronunciation:** say the name as the letter "L", then the word "sync" (el-sink), as in "El Sync". In the browser voice this is handled automatically. If you record clips, say it the same way. "edX" is "ed-X".
+
+
 Lily speaks with the browser's own voice by default. The voice a visitor hears depends on their device, so it is not always Canadian.
 To make her sound the same, and Canadian, for everyone, record the lines below once with a Canadian English text-to-speech voice
 (for example the Canadian voices in Azure Speech or Google Cloud Text-to-Speech, or ElevenLabs), save each line as an MP3, and list it in the manifest.
@@ -24,7 +27,7 @@ Tips: ask for a soft, warm, unhurried delivery. Keep the exact words, because th
 
 | Id | File name | Say this |
 | --- | --- | --- |
-| welcome | welcome.mp3 | Hi, I'm Lily. Welcome to LSync, your unified learning portfolio. If you learn on YouTube, Coursera, Udemy, edX, GitHub, or just by reading, LSync brings it together in one place, so you can see your progress, organise your skills, and choose what to share. Take a look around, or tap a platform to see how it works. Whenever you need anything, just say, Hey Lily, and I'll be right here. Tap the little microphone to switch that on. |
+| welcome | welcome.mp3 | Hi, I'm Lily. Welcome to LSync, your unified learning portfolio. If you learn on YouTube, Coursera, Udemy, edX, GitHub, or just by reading, LSync brings it together in one place, so you can see your progress, organise your skills, and choose what to share. Take a look around, or tap a platform to see how it works. Tap the little microphone once and allow it, then you can just say, Hey Lily, and I'll be right here. |
 | welcome-tap | welcome-tap.mp3 | Hi, I'm Lily. Welcome to LSync, your unified learning portfolio. If you learn on YouTube, Coursera, Udemy, edX, GitHub, or just by reading, LSync brings it together in one place, so you can see your progress, organise your skills, and choose what to share. Take a look around, or tap a platform to see how it works. Whenever you need anything, just tap me, and I'll be right here. |
 | blog | blog.mp3 | Our blog has articles on keeping track of what you learn online, and how to turn it into something you can show. Here is where to find them. |
 | signin | signin.mp3 | You can sign in here. If you forget your password, there is a reset link on that page. |

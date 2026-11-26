@@ -63,4 +63,6 @@ export type Profile = {
   about?: string;
   interests: string[];
   isPublic: boolean;
+  /** A picture address from the server, when it has one. */
+  avatar?: string;
 };

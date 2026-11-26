@@ -96,7 +96,7 @@ export function SourceGrid({ state, variant = "full" }: { state: ReturnType<type
       body = ghOn ? "Choose which repositories to sync. Matched commits show up in your activity." : "Import repositories and commits as evidence of what you build while you learn.";
     } else {
       const a = linked.get(s.id.toLowerCase());
-      pill = a ? { text: `Connected as ${a.username}`, tone: "good" } : t ? { text: `${t.sessions} ${t.sessions === 1 ? "log" : "logs"} · ${fmtHours(t.minutes)}`, tone: "good" } : { text: "Not connected", tone: "plain" };
+      pill = a ? { text: `Profile linked: ${a.username}`, tone: "good" } : t ? { text: `${t.sessions} ${t.sessions === 1 ? "log" : "logs"} · ${fmtHours(t.minutes)}`, tone: "good" } : { text: "Not connected", tone: "plain" };
       body = a ? (t ? `${t.sessions} ${t.sessions === 1 ? "log" : "logs"} · ${fmtHours(t.minutes)} counted towards your skills.` : "Your profile is linked. Add a log whenever you learn here and the hours count towards your skills.") : s.id === "YouTube" ? "Link your channel name, then log the videos you want counted. Automatic import is coming soon." : s.id === "Blogs and docs" ? "Link a site you read, and log the articles and docs. Reading time counts towards your skills." : `Link your ${s.id} profile, then log what you learn. Hours count towards your skills and growth.`;
     }
     const pillCls = pill.tone === "good" ? "bg-success-soft text-success" : pill.tone === "busy" ? "bg-lilac-soft text-indigo-brand" : "bg-black/5 text-body";
@@ -128,7 +128,7 @@ export function SourceGrid({ state, variant = "full" }: { state: ReturnType<type
             </>
           ) : (
             <>
-              <Button type="button" onClick={() => setLinking(s)} disabled={accounts.loading} className="flex-1 !py-2.5 text-sm">Connect {s.id === "Blogs and docs" ? "a site" : s.id}</Button>
+              <Button type="button" onClick={() => setLinking(s)} disabled={accounts.loading} className="flex-1 !py-2.5 text-sm">Link {s.id === "Blogs and docs" ? "a site" : `${s.id} profile`}</Button>
               <ButtonLink href={`/activity?add=1&platform=${encodeURIComponent(s.id)}`} variant="outline" className="flex-1 !py-2.5 text-sm">Add manually</ButtonLink>
             </>
           )}
@@ -143,10 +143,10 @@ export function SourceGrid({ state, variant = "full" }: { state: ReturnType<type
       {gh.error && <Banner tone="warn">We couldn&apos;t check your GitHub connection right now. Other sources still work.</Banner>}
       {accounts.error && <Banner tone="warn">We couldn&apos;t load your linked accounts right now. You can still add logs manually.</Banner>}
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{SOURCES.map(card)}</ul>
-      <ConfirmDialog open={linking !== null} title={linking ? `Connect ${linking.id}` : "Connect"} confirmLabel="Connect" busy={busy} onConfirm={confirmLink} onCancel={closeDialog}>
+      <ConfirmDialog open={linking !== null} title={linking ? `Link your ${linking.id} profile` : "Link a profile"} confirmLabel="Link profile" busy={busy} onConfirm={confirmLink} onCancel={closeDialog}>
         {linking && (
           <>
-            <p>We save this on your LSync profile. It doesn&apos;t import your hours automatically, so you still add logs yourself.</p>
+            <p>We save this name on your LSync profile so your portfolio can show it. We don&apos;t check it with {linking.id} and we don&apos;t import your hours, so you still add logs yourself.</p>
             <div className="mt-4 grid gap-3">
               <TextField label={fieldFor(linking.id).name} placeholder={fieldFor(linking.id).hint} autoComplete="off" value={username} onChange={(e) => setUsername(e.target.value)} />
               <TextField label={fieldFor(linking.id).urlLabel} type="url" placeholder="https://" autoComplete="off" value={url} onChange={(e) => setUrl(e.target.value)} />
