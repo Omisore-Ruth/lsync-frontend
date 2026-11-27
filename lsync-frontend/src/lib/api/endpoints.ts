@@ -42,6 +42,8 @@ export const endpoints = {
   // --- GitHub ---
   githubConnect: "/api/integrations/github/connect",
   githubRepositories: "/api/integrations/github/repositories",
+  /** The backend team's documented form of the repositories call. */
+  githubRepositoriesPage: "/api/integrations/github/repositories?page=1&perPage=30",
   githubCommits: (owner: string, repo: string) =>
     `/api/integrations/github/repositories/${owner}/${repo}/commits`,
   githubSync: (owner: string, repo: string) =>

@@ -32,7 +32,7 @@ const FIELD: Record<string, { name: string; hint: string; urlLabel: string }> = 
 const fieldFor = (id: string) => FIELD[id] ?? { name: `Your ${id} username`, hint: "The name shown on your profile", urlLabel: "Profile link (optional)" };
 
 /** The source cards: GitHub connects through the backend, everything else is logged by hand for now. */
-export function SourceGrid({ state, variant = "full" }: { state: ReturnType<typeof useSourceState>; variant?: "full" | "tiles" }) {
+export function SourceGrid({ state, variant = "full", hideGithubCheckWarning = true }: { state: ReturnType<typeof useSourceState>; variant?: "full" | "tiles"; hideGithubCheckWarning?: boolean }) {
   const { gh, ghOn, totals, linked, accounts } = state;
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -140,7 +140,7 @@ export function SourceGrid({ state, variant = "full" }: { state: ReturnType<type
   return (
     <div className="flex flex-col gap-3">
       {error && <Banner tone="error">{error}</Banner>}
-      {gh.error && <Banner tone="warn">We couldn&apos;t check your GitHub connection right now. Other sources still work.</Banner>}
+      {gh.error && !hideGithubCheckWarning && <Banner tone="warn">We couldn&apos;t check your GitHub connection right now. Other sources still work.</Banner>}
       {accounts.error && <Banner tone="warn">We couldn&apos;t load your linked accounts right now. You can still add logs manually.</Banner>}
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{SOURCES.map(card)}</ul>
       <ConfirmDialog open={linking !== null} title={linking ? `Link your ${linking.id} profile` : "Link a profile"} confirmLabel="Link profile" busy={busy} onConfirm={confirmLink} onCancel={closeDialog}>

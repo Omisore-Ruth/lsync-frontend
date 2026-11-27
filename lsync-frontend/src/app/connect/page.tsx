@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { SourceGrid, useSourceState } from "@/components/sources/SourceGrid";
 import { Banner, Loading } from "@/components/ui/Banner";
+import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { SOURCES } from "@/lib/sources";
@@ -42,7 +43,16 @@ function Connect() {
           </div>
         </header>
 
-        {githubResult === "connected" && <Banner tone="success">GitHub is connected. You can choose repositories from your dashboard.</Banner>}
+        {githubResult === "connected" && state.gh.loading && <Banner tone="info">GitHub said yes. Checking the connection…</Banner>}
+        {githubResult === "connected" && !state.gh.loading && state.ghOn && <Banner tone="success">GitHub is connected. You can choose your repositories now.</Banner>}
+        {githubResult === "connected" && !state.gh.loading && !state.ghOn && (
+          <Banner
+            tone="warn"
+            action={<Button type="button" variant="outline" onClick={state.gh.reload} className="!px-4 !py-2 !text-sm">Check again</Button>}
+          >
+            GitHub approved the connection, but LSync couldn&apos;t load your repositories yet. Give it a moment and check again. If it keeps happening, tell the team.
+          </Banner>
+        )}
         {githubResult === "error" && <Banner tone="error">We couldn&apos;t connect GitHub. Please try again.</Banner>}
 
         <div className="rounded-3xl bg-white/60 p-4 sm:p-6">

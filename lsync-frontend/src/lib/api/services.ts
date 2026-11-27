@@ -118,7 +118,7 @@ export async function deleteLog(id: string): Promise<void> {
 /** Connected if the repositories call succeeds. A 4xx means "not connected yet". Network errors still throw. */
 export async function githubConnected(): Promise<boolean> {
   try {
-    await api(endpoints.githubRepositories, { quiet401: true });
+    await api(endpoints.githubRepositoriesPage, { quiet401: true });
     return true;
   } catch (e) {
     if (e instanceof ApiError && e.status >= 400 && e.status < 500) return false;
@@ -135,7 +135,7 @@ export async function startGithubConnect(): Promise<string> {
 }
 
 export async function listGithubRepos(): Promise<GithubRepo[]> {
-  const data = await api(endpoints.githubRepositories);
+  const data = await api(endpoints.githubRepositoriesPage);
   return listOf(data, ["data", "repositories", "repos", "items"]).map((r: any) => ({
     fullName: String(r.fullName ?? r.full_name ?? r.name),
     description: r.description ?? undefined,
