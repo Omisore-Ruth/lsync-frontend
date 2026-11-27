@@ -41,6 +41,7 @@ const items = [
 
 export function SocialButtons() {
   return (
+    <div className="flex flex-col items-center gap-3">
     <div className="flex items-center justify-center gap-4">
       {items.map((p) => (
         <button
@@ -54,6 +55,8 @@ export function SocialButtons() {
           {p.icon}
         </button>
       ))}
+    </div>
+    <p className="text-xs text-muted">Google, GitHub and Microsoft sign-in are coming soon. For now, use your email and password.</p>
     </div>
   );
 }

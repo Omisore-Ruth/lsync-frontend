@@ -8,6 +8,8 @@ import { useSyncExternalStore } from "react";
  */
 const KEY = (who: string) => `lsync-avatar:${who}`;
 const EVENT = "lsync-avatar-change";
+/** Saved when someone removes their photo, so a picture the server still holds does not come back. */
+const REMOVED = "removed";
 
 export function readAvatar(who: string | undefined): string | null {
   if (!who) return null;
@@ -20,8 +22,7 @@ export function readAvatar(who: string | undefined): string | null {
 
 export function writeAvatar(who: string, dataUrl: string | null) {
   try {
-    if (dataUrl) window.localStorage.setItem(KEY(who), dataUrl);
-    else window.localStorage.removeItem(KEY(who));
+    window.localStorage.setItem(KEY(who), dataUrl ?? REMOVED);
   } catch {
     throw new Error("Your browser has no room to keep the photo. Try a smaller picture.");
   }
@@ -40,6 +41,7 @@ function subscribe(cb: () => void) {
 /** The saved photo for this person, or null. `serverUrl` is used when the backend already has one and this device does not. */
 export function useAvatar(who: string | undefined, serverUrl?: string | null): string | null {
   const local = useSyncExternalStore(subscribe, () => readAvatar(who), () => null);
+  if (local === REMOVED) return null; // they removed it on purpose; never fall back to the server copy
   return local ?? serverUrl ?? null;
 }
 

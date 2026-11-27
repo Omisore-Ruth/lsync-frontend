@@ -16,6 +16,7 @@ This lists what the website sends and expects, and the things that will cause er
 
 - The website now lets users upload a profile photo. It crops it to a 256 x 256 JPEG in the browser (about 15 KB) and sends it as the `avatar` field of `PUT /api/users/profile`, as a base64 data URL string (`data:image/jpeg;base64,...`).
 - Please tell me what you want instead: a data URL string, or a multipart file upload (multer and Cloudinary are already in `package.json`), or a separate `POST /api/users/avatar`. Whichever you choose, return the final picture address as `avatar` in `GET /api/users/me` and in `GET /api/portfolio/:username`.
+- **Removing a photo:** the website sends `avatar: ""` when someone removes their photo. Please clear the stored avatar when you get an empty string or null, and return no `avatar` after that. (If the server keeps the old picture, it would otherwise come back.)
 - Until then the photo is also kept on the user's own device, so it still shows for them.
 - `PUT /api/users/profile` currently takes name, username, bio, avatar and track. The profile page also has **headline** and **interests** fields that are not saved because the backend has no fields for them. Please add `headline` (string, max 120) and `interests` (array of strings, max 12), and return them from `GET /api/users/me`.
 
@@ -48,7 +49,15 @@ The website already has the card, button and activity page pattern from GitHub, 
 - CORS currently allows every origin. For launch, restrict it to the frontend domains.
 - Keep `GET /api/health` fast and with no database call, so it can be pinged.
 
-## 6. Quick checklist to send back to Ruth
+## 6. Sign in with Google, GitHub and Microsoft (optional, after launch)
+
+The three buttons on the login page are switched off, with a "coming soon" note. To turn one on the backend needs: an OAuth app for that provider, a route that starts the sign-in, a callback route that creates or finds the user and returns the same token as `POST /api/auth/login`, and a redirect back to `https://<frontend>/login?token=...` (or similar). Tell me which providers and the route names and I will wire the buttons. GitHub sign-in can reuse the existing OAuth app if you add the sign-in callback.
+
+## 7. Public portfolio page
+
+`GET /api/portfolio/:username` exists, but the website's public page (`/portfolio/<username>`) is not built because I do not know the reply shape. Please send an example reply (fake data is fine) and say which parts are public.
+
+## 8. Quick checklist to send back to Ruth
 
 - [ ] Email package added and reset email arrives
 - [ ] Error handler moved out of the 404 handler
